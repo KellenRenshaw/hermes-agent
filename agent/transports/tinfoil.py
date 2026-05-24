@@ -99,6 +99,10 @@ class TinfoilTransport(ChatCompletionsTransport):
         self._secure_client = secure
         return secure
 
+    def is_secure(self) -> bool:
+        """``True`` when the secure HPKE transport is active."""
+        return self._secure_client is not None
+
     def build_secure_openai_client(
         self,
         api_key: str,

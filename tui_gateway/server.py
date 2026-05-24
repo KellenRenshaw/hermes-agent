@@ -1484,6 +1484,15 @@ def _session_info(agent) -> dict:
         info["update_command"] = recommended_update_command()
     except Exception:
         pass
+    try:
+        from agent.transports import get_transport
+
+        if getattr(agent, "api_mode", "") == "tinfoil_ehbp":
+            transport = get_transport("tinfoil_ehbp")
+            if transport is not None:
+                info["tinfoil_secure"] = transport.is_secure()
+    except Exception:
+        pass
     return info
 
 
