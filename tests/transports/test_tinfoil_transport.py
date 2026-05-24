@@ -243,6 +243,38 @@ class TestTinfoilTransportSecureClient:
         assert kw["model"] == "test-model"
         assert kw["messages"][0]["content"] == "test"
 
+    def test_build_secure_openai_client_uses_enclave_as_base_url(self):
+        """Secure client's enclave hostname is used as base_url so TLS
+        cert pinning matches the host we actually connect to."""
+        from agent.transports.tinfoil import TinfoilTransport
+        t = TinfoilTransport()
+
+        mock_secure = MagicMock()
+        mock_secure.enclave = "router.inf6.tinfoil.sh"
+        mock_secure.make_secure_http_client.return_value = MagicMock()
+
+        fake_openai = MagicMock()
+        fake_openai_instance = MagicMock()
+        fake_openai.OpenAI.return_value = fake_openai_instance
+
+        with (
+            patch.object(t, "build_secure_client", return_value=mock_secure),
+            patch.dict("sys.modules", {"openai": fake_openai}),
+        ):
+            client = t.build_secure_openai_client(
+                api_key="key",
+                base_url="https://inference.tinfoil.sh/v1",
+            )
+
+        assert client is fake_openai_instance
+        fake_openai.OpenAI.assert_called_once_with(
+            api_key="key",
+            base_url="https://router.inf6.tinfoil.sh/v1/",
+            http_client=mock_secure.make_secure_http_client.return_value,
+            timeout=None,
+            default_headers=None,
+        )
+
 
 class TestTinfoilTransportVerificationDoc:
     """get_verification_document accessor."""

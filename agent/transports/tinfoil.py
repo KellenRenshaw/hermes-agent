@@ -117,13 +117,16 @@ class TinfoilTransport(ChatCompletionsTransport):
         if secure is not None:
             try:
                 http_client = secure.make_secure_http_client()
+                effective_base_url = f"https://{secure.enclave}/v1/"
                 logger.info(
-                    "Tinfoil EHBP secure transport established for %s",
+                    "Tinfoil EHBP secure transport established for %s "
+                    "(enclave %s)",
                     base_url,
+                    secure.enclave,
                 )
                 return openai.OpenAI(
                     api_key=api_key,
-                    base_url=base_url,
+                    base_url=effective_base_url,
                     http_client=http_client,
                     timeout=timeout,
                     default_headers=default_headers,
