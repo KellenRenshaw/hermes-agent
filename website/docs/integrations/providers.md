@@ -477,6 +477,8 @@ The base URL can be overridden with `GMI_BASE_URL` (default: `https://api.gmi-se
 
 HPKE end-to-end encrypted AI inference via [Tinfoil.sh](https://tinfoil.sh) — OpenAI-compatible API, API key authentication. All inference payloads are encrypted using HPKE (RFC 9180) secure enclaves before leaving the client.
 
+In the TUI, a lock icon in the status bar shows the encryption state: 🔒 (green) when the secure HPKE transport is active, 🔓 (red) when falling back to plain TLS (tinfoil SDK not installed or attestation failed).
+
 ```bash
 # Tinfoil.sh
 hermes chat --provider tinfoil --model kimi-k2-6
