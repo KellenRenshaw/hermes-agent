@@ -283,6 +283,7 @@ export function StatusRule({
   bgCount,
   sessionStartedAt,
   showCost,
+  tinfoilSecure,
   turnStartedAt,
   voiceLabel,
   t
@@ -340,6 +341,12 @@ export function StatusRule({
             >
               {' │ '}
               {voiceLabel}
+            </Text>
+          ) : null}
+          {tinfoilSecure !== undefined ? (
+            <Text color={tinfoilSecure ? t.color.ok : t.color.error}>
+              {' │ '}
+              {tinfoilSecure ? '\uD83D\uDD12' : '\uD83D\uDD13'}
             </Text>
           ) : null}
           {bgCount > 0 ? <Text color={t.color.muted}> │ {bgCount} bg</Text> : null}
@@ -466,6 +473,7 @@ interface StatusRuleProps {
   status: string
   statusColor: string
   t: Theme
+  tinfoilSecure?: boolean
   turnStartedAt?: null | number
   usage: Usage
   voiceLabel?: string
